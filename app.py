@@ -2,7 +2,6 @@
     ConcursosNoBrasil web scrapper and API
 '''
 
-import string
 import requests
 from bs4 import BeautifulSoup
 from flask import Flask, abort, jsonify
@@ -13,7 +12,7 @@ availableCategories = ['br', 'ac', 'al', 'am', 'ap', 'ba', 'ce', 'df', 'es', 'go
 baseURL = 'https://concursosnobrasil.com/concursos/'
 errorMessage = ''
 
-def pageRequest(url: string):
+def pageRequest(url: str):
     try:
         return requests.get(url)
     except requests.HTTPError:
@@ -24,7 +23,7 @@ def pageRequest(url: string):
         return None
 
 
-def initWebScraper(url: string, parser: string = 'html.parser'):
+def initWebScraper(url: str, parser: str = 'html.parser'):
     webResponse = pageRequest(url)
 
     if(webResponse == None):
@@ -34,16 +33,16 @@ def initWebScraper(url: string, parser: string = 'html.parser'):
     return BeautifulSoup(webResponse.content, parser)
 
 
-def categoryTarget(category: string) -> None:
+def categoryTarget(category: str) -> str:
     global errorMessage 
     if ((len(category) != 2) or (category not in availableCategories)):
         errorMessage = "Invalid Category"
-        return None
+        return ""
 
     return baseURL + category
 
 
-def getCategoryItemStatus(item) -> string:
+def getCategoryItemStatus(item) -> str:
     try:
         item.find('span', class_='label-previsto').text
     except:
@@ -65,11 +64,8 @@ def Concursos(categorySelect):
         print("Developer: This is a security issue, do not propagate None result")
         abort(jsonify(message=errorMessage, code=400))
 
-
-    availableItemsInCategory = pageScraper.find(
-        'div', class_='list-concursos').find('tbody').find_all('tr')
-    # analyzing contents
-
+    availableItemsInCategory = pageScraper.find('div', class_='list-concursos').find('tbody').find_all('tr') # type: ignore
+ 
     for item in availableItemsInCategory:
         concursosAvailable.append({
             'organization': item.find('a').text.rstrip(),
@@ -81,4 +77,6 @@ def Concursos(categorySelect):
     #print(concursosAvailable)
     return jsonify(concursosAvailable)
 
-#TODO: add an limitor factor for page access
+
+if __name__ == "__main__":
+    app.run()
