@@ -1,5 +1,5 @@
 # Concursos No Brasil Website Scrapper 
-  API retorna todos os concursos no brasil.
+  API retorna todos os concursos públicos no Brasil.
 
 ## Do Uso
   Esse projeto tem caráter educativo e usa matérias publicadas no website [ConcursosNoBrasil.com](https://concursosnobrasil.com) como fonte de dados. Todo conteúdo utilizado é de propriedade e responsabilidade do site [ConcursosNoBrasil.com](https://concursosnobrasil.com).
